@@ -1,0 +1,17 @@
+{
+  "name": "essay_share",
+  "version": "0.0.1",
+  "description": "A simple site to share essays/text in a cool-looking minimalism-y way",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Colin Atkinson",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^0.8.1",
+    "express": "^4.11.1",
+    "mongoose": "^3.8.22",
+    "shortid": "^2.1.3"
+  }
+}
