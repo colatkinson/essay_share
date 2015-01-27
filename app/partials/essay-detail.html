@@ -1,0 +1,8 @@
+<div class="essay-header">
+    <h1>{{essay.title}}</h1>
+    <p>By {{essay.author}}</p>
+</div>
+
+<div class="essay-text">
+    <p ng-repeat="par in essay.text.split('\n')">{{par}}</p>
+</div>

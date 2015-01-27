@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" ng-app="essayApp">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="bower_components/normalize.css/normalize.css" />
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="css/app.css" />
+        <link rel="stylesheet" href="css/animations.css" />
+
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular-route/angular-route.js"></script>
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="js/app.js"></script>
+        <script src="js/controllers.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>-->
+                  <a class="navbar-brand" href="#/essays"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Essay Share</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="view-container">
+            <div ng-view class="view-frame"></div>
+        </div>
+
+    </body>
+</html>
