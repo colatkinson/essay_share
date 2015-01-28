@@ -1,5 +1,7 @@
 var essayApp = angular.module('essayApp', [
   'ngRoute',
+
+  'essayAnimations',
   'essayControllers'
 ]);
 
