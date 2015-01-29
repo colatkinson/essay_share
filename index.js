@@ -74,7 +74,7 @@ db.once('open', function (callback) {
         Essay.findOne({_id: req.params.id}, function(err, record) {
             if(err) {
                 res.send("Benis :DDD");
-                //res.end();
+                throw err;
             }
             User.findOne({_id: record.author}, function(err, record2) {
                 var obj = {
@@ -86,29 +86,45 @@ db.once('open', function (callback) {
                 };
                 res.send(obj);
             });
-            //res.send(records);
         });
     });
 
     app.get("/api/essays.json", function(req, res) {
-        Essay.find({}).sort({date: "desc"}).exec(function(err, records) {
-            if(err) res.send("It's fucked");
+        var num = (parseInt(req.query.num) || 20);
+        var searchObj = {};
+        if(req.query.from) {
+            searchObj = { date: { $lt: req.query.from } };
+        };
+        if(req.query.search) {
+            var obj = {$regex: req.query.search.split(" ").join("|"), $options: "i"};
+            searchObj.$or = [{text: obj}, {title: obj}];
+        };
+        Essay.find(searchObj).sort({date: "desc"}).limit(num).exec(function(err, records) {
+            if(err) {
+                res.send("It's fucked");
+                throw err;
+            }
 
             var returnObj = [];
-            records.forEach(function(record, index, array) {
-                User.findOne({_id: record.author}, function(err, records2) {
-                    returnObj.push({
-                        id: record._id,
-                        author: records2.username,
-                        date: record.date,
-                        title: record.title,
-                        text: record.text.substring(0, 25)+"..."
+            if(records.length > 0) {
+                records.forEach(function(record, index, array) {
+                    User.findOne({_id: record.author}, function(err, records2) {
+                        if(err) throw err;
+                        returnObj.push({
+                            id: record._id,
+                            author: records2.username,
+                            date: record.date,
+                            title: record.title,
+                            text: record.text.substring(0, 25)+"..."
+                        });
+                        if(returnObj.length == array.length) {
+                            res.send(returnObj);
+                        }
                     });
-                    if(returnObj.length == array.length) {
-                        res.send(returnObj);
-                    }
                 });
-            });
+            } else {
+                res.send({});
+            }
         });
     });
 

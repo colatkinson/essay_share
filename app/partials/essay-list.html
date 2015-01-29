@@ -6,7 +6,7 @@
       <!--Search: <input ng-model="query"><br />-->
       <div class="form-group">
         <label for="usr">Search:</label>
-        <input type="text" class="form-control" id="usr" ng-model="query">
+        <input type="text" class="form-control" id="usr" ng-model="query" ng-enter="go('/search/{{query}}')">
       </div>
       <div class="form-group">
         <label for="sort">Sort by:</label>
@@ -22,7 +22,7 @@
       <!--Body content-->
 
       <ul class="essays">
-        <li ng-repeat="essay in essays | filter:query | orderBy:orderProp" class="essay-listing">
+        <li ng-repeat="essay in essays | orderBy:orderProp" class="essay-listing">
           <!--<a href="#/essays/{{essay.id}}" class="thumb"><img ng-src="{{phone.imageUrl}}"></a>-->
           <a href="#/essay/{{essay.id}}">{{essay.title}} by {{essay.author}}</a>
           <p class="text-preview">{{essay.text}}</p>
