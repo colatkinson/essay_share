@@ -37,33 +37,48 @@ var checkLoggedin = function($q, $timeout, $http, $location, $rootScope) {
     });
 };
 
-essayApp.config(['$routeProvider',
-  function($routeProvider) {
-    $routeProvider.
-      when('/essays', {
-        templateUrl: 'partials/essay-list.html',
-        controller: 'EssayListCtrl',
-        resolve: {
-            loggedin: checkLoggedin,
-            userName: getUserName
-        }
-      }).
-      when('/essay/:essayId', {
-        templateUrl: 'partials/essay-detail.html',
-        controller: 'EssayDetailCtrl'
-      }).
-      when("/search/:term", {
-        templateUrl: "partials/essay-list.html",
-        controller: "EssaySearchCtrl"
-      }).
-      when("/login", {
-        templateUrl: "partials/login.html",
-        controller: "EssayLoginCtrl"
-      }).
-      otherwise({
-        redirectTo: '/essays'
-      });
-  }]);
+essayApp.config(['$routeProvider', '$locationProvider', '$provide',
+    function($routeProvider, $locationProvider, $provide) {
+        $routeProvider.
+            when('/essays', {
+                templateUrl: 'partials/essay-list.html',
+                controller: 'EssayListCtrl',
+                resolve: {
+                    loggedin: checkLoggedin,
+                    userName: getUserName
+                }
+            }).
+            when('/essay/:essayId', {
+                templateUrl: 'partials/essay-detail.html',
+                controller: 'EssayDetailCtrl'
+            }).
+            when("/search/:term", {
+                templateUrl: "partials/essay-list.html",
+                controller: "EssaySearchCtrl"
+            }).
+            when("/login", {
+                templateUrl: "partials/login.html",
+                controller: "EssayLoginCtrl"
+            }).
+            when("/user/:username", {
+                templateUrl: 'partials/user.html',
+                controller: "EssayUserCtrl"
+            }).
+            otherwise({
+                redirectTo: '/essays'
+            });
+
+    // use the HTML5 History API
+    $locationProvider.html5Mode(true);
+
+    /*$provide.decorator('$sniffer', function($delegate) {
+        $delegate.history = false;
+        return $delegate;
+    });*/
+    $locationProvider
+        .html5Mode(true)
+        .hashPrefix('!');
+}]);
 
 essayApp.directive('ngEnter', function () {
     return function (scope, element, attrs) {

@@ -24,7 +24,7 @@
       <ul class="essays">
         <li ng-repeat="essay in essays | orderBy:orderProp" class="essay-listing">
           <!--<a href="#/essays/{{essay.id}}" class="thumb"><img ng-src="{{phone.imageUrl}}"></a>-->
-          <a href="#/essay/{{essay.id}}">{{essay.title}} by {{essay.author}}</a>
+          <a href="/essay/{{essay.id}}">{{essay.title}} by {{essay.author}}</a>
           <p class="text-preview">{{essay.text}}</p>
         </li>
       </ul>

@@ -5,8 +5,22 @@ var mongoose = require('mongoose'),
 var shortId = require('shortid');
 
 var UserSchema = new Schema({
-    username: { type: String, required: true, index: { unique: true } },
-    password: { type: String, required: true },
+    username: {
+        type: String,
+        required: true,
+        index: {
+            unique: true
+        }
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        'default': "foo@bar.com"
+    },
     _id: {
         type: String,
         unique: true,

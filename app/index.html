@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en" ng-app="essayApp">
     <head>
+        <base href="/" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <meta name="theme-color" content="#ffffff">
 
@@ -34,11 +35,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                   </button>-->
-                  <a class="navbar-brand" href="#/essays"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Essay Share</a>
+                  <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Essay Share</a>
                 </div>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{{user ? '#/user/'+user.username : '#/login'}}">{{user ? user.username : "Login"}}</a></li>
+                    <li><a href="{{user ? '/user/'+user.username : '/login'}}">{{user ? user.username : "Login"}}</a></li>
                     <!--<li class="dropdown">
                         <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">

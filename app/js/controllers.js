@@ -76,13 +76,17 @@ essayControllers.controller('EssayLoginCtrl', ['$scope', '$routeParams', '$http'
         };
 }]);
 
-/*$rootScope.$on('$routeChangeStart', function (event, next) {
-    var userAuthenticated = ...; /* Check if the user is logged in *
+essayControllers.controller("EssayUserCtrl", ["$scope", "$routeParams", "$http", '$location',
+    function($scope, $routeParams, $http, $location) {
+        $http.get("api/user/" + $routeParams.username + ".json").success(function(data) {
+            $scope.user = data;
+            //$scope.query = $routeParams.term;
+        });
 
-    if (!userAuthenticated && !next.isLogin) {
-        /* You can save the user's location to take him back to the same page after he has logged-in *
-        $rootScope.savedLocation = $location.url();
+        $scope.go = function(path) {
+            go($location, path);
+        };
 
-        $location.path('/User/LoginUser');
-    }
-});*/
+        $scope.orderProp = '-date';
+    }]
+);

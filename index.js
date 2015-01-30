@@ -11,7 +11,6 @@ var bcrypt = require('bcrypt');
 var fs = require("fs");
 
 var secretsFile = require("./secret-config.json");
-console.log(secretsFile.sessionSecret);
 
 //var loremIpsum = require("lorem-ipsum");
 
@@ -19,6 +18,13 @@ var port = (process.env.PORT || 3000);
 
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
+
+var auth = function(req, res, next) {
+    if (!req.isAuthenticated())
+        res.send(401);
+    else
+        next();
+};
 
 var uri = "mongodb://localhost:27017/essay_share";
 mongoose.connect(uri);
@@ -169,9 +175,9 @@ db.once('open', function (callback) {
         app.render(__dirname+'/app/index', { message: req.flash('message') });
     });*/
 
-    app.use(express.static(__dirname + '/app'));
+    //app.use(express.static(__dirname + '/app'));
 
-    app.post('/login',
+    app.post('/loginReq',
         passport.authenticate('local', { successRedirect: '/',
                                          failureRedirect: '/#/login',
                                          failureFlash: true })
@@ -247,6 +253,46 @@ db.once('open', function (callback) {
         });
     });
 
+    app.get("/api/user/:name.json", auth, function(req, res) {
+        User.findOne({username: req.params.name}, function(err, record) {
+            if(err) {
+                res.send(500, "Error occurred");
+                throw err;
+            }
+            console.log(record);
+            var returnObj = {
+                username: record.username,
+                email: record.email,
+                essays: []
+            }
+            console.log(record._id);
+            Essay.find({author: record._id}).sort({date: "desc"}).exec(function(err, records) {
+                if(err) {
+                    res.sendStatus(500, "Error occurred");
+                    throw err;
+                }
+                if(records.length > 0) {
+                    records.forEach(function(record2, index, array) {
+                        returnObj.essays.push({
+                            id: record2._id,
+                            title: record2.title,
+                            date: record2.date,
+                            text: record2.text.substring(0, 25)+"..."
+                        });
+
+                        if(returnObj.essays.length == array.length) {
+                            res.send(returnObj);
+                        }
+                    });
+                } else {
+                    res.send(returnObj);
+                }
+            });
+
+            //res.send(record);
+        })
+    });
+
     app.get("/e/:id", function(req, res) {
         Essay.findOne({_id: req.params.id}, function(err, records) {
             if(err) {
@@ -267,6 +313,16 @@ db.once('open', function (callback) {
 
     var server = app.listen(port, function() {
         console.log("Running!");
+    });
+
+    app.use('/bower_components', express.static(__dirname + '/app/bower_components'));
+    app.use('/css', express.static(__dirname + '/app/css'));
+    app.use('/js', express.static(__dirname + '/app/js'));
+    app.use('/partials', express.static(__dirname + '/app/partials'));
+
+    app.all('/*', function(req, res, next) {
+        // Just send the index.html for other files to support HTML5Mode
+        res.sendFile('/app/index.html', { root: __dirname });
     });
 
 });

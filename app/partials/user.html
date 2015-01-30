@@ -1,0 +1,15 @@
+<div class="essay-header">
+    <h1>{{user.username}}</h1>
+    <p>{{user.email}}</p>
+</div>
+
+<div class="essay-text">
+    <ul class="essays">
+        <li ng-repeat="essay in user.essays | orderBy:orderProp" class="essay-listing">
+          <!--<a href="#/essays/{{essay.id}}" class="thumb"><img ng-src="{{phone.imageUrl}}"></a>-->
+          <a href="/essay/{{essay.id}}">{{essay.title}}</a>
+          <p class="text-preview">{{essay.text}}</p>
+        </li>
+      </ul>
+</div>
+
