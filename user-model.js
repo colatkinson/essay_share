@@ -43,4 +43,9 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
     });
 };
 
+UserSchema.methods.isValidPassword = function(password){
+    console.log(password, this.password);
+    return bCrypt.compareSync(password, this.password);
+}
+
 module.exports = mongoose.model('User', UserSchema);

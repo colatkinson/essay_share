@@ -4,10 +4,17 @@ var mongoose = require("mongoose");
 var shortId = require('shortid');
 var User = require('./user-model');
 var swig  = require('swig');
+var flash = require('connect-flash');
+var expressSession = require('express-session');
+var bodyParser = require('body-parser');
+var bcrypt = require('bcrypt');
 
-var loremIpsum = require("lorem-ipsum");
+//var loremIpsum = require("lorem-ipsum");
 
 var port = (process.env.PORT || 3000);
+
+var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy;
 
 var uri = "mongodb://localhost:27017/essay_share";
 mongoose.connect(uri);
@@ -68,7 +75,115 @@ db.once('open', function (callback) {
     /*app.get("/", function(req, res) {
         res.send("<h1>Holla holla get dolla</h1>");
     });*/
+
+
+
+    app.use(expressSession({secret: 'mySecretKey', saveUninitialized: true, resave: true}));
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(flash());
+    app.use( bodyParser.json() );       // to support JSON-encoded bodies
+    app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+        extended: true
+    }));
+    //app.use(express.cookieSession({ secret: 'tobo!', maxAge: 360*5 }));
+
+    passport.serializeUser(function(user, done) {
+        console.log('serializing user: ');console.log(user);
+        done(null, user._id);
+    });
+ 
+    passport.deserializeUser(function(id, done) {
+        User.findById(id, function(err, user) {
+            done(err, user);
+        });
+    });
+
+    passport.use(new LocalStrategy(
+        function(username, password, done) {
+            console.log("Strategy called!");
+          User.findOne({ username: username }, function(err, user) {
+            if (err) { return done(err); }
+            if (!user) {
+              return done(null, false, { message: 'Incorrect username.' });
+            }
+            /*if (!user.validPassword(password)) {
+              return done(null, false, { message: 'Incorrect password.' });
+            }*/
+            comparePassword(password, user, function(err, isMatch) {
+                console.log(isMatch);
+                if(!isMatch) {
+                    console.log("Bad password");
+                    return done(null, false, { message: 'Incorrect password.' });
+                } else {
+                    return done(null, user);
+                }
+            });
+            //return done(null, user);
+          });
+        }
+    ));
+    /*passport.use('login', new LocalStrategy({
+        passReqToCallback : true
+      },
+      function(req, username, password, done) { 
+        console.log(req);
+        // check in mongo if a user with username exists or not
+        User.findOne({ 'username' :  username }, 
+          function(err, user) {
+            // In case of any error, return using the done method
+            if (err)
+              return done(err);
+            // Username does not exist, log error & redirect back
+            if (!user){
+              console.log('User Not Found with username '+username);
+              return done(null, false, 
+                    req.flash('message', 'User Not found.'));                 
+            }
+            // User exists but wrong password, log the error 
+            if (!isValidPassword(user, password)){
+              console.log('Invalid Password');
+              return done(null, false, 
+                  req.flash('message', 'Invalid Password'));
+            }
+            // User and password both match, return user from 
+            // done method which will be treated like success
+            return done(null, user);
+          }
+        );
+    }));*/
+    var comparePassword = function(candidatePassword, user, cb) {
+        bcrypt.compare(candidatePassword, user.password, function(err, isMatch) {
+            if (err) return cb(err);
+            console.log(user.password, candidatePassword);
+            cb(null, isMatch);
+        });
+    };
+
+    /*app.get('/', function(req, res) {
+        // Display the Login page with any flash message, if any
+        app.render(__dirname+'/app/index', { message: req.flash('message') });
+    });*/
+
     app.use(express.static(__dirname + '/app'));
+
+    app.post('/login',
+        passport.authenticate('local', { successRedirect: '/',
+                                         failureRedirect: '/#/login',
+                                         failureFlash: true })
+    );
+    /*var failRedirect = "/#/login";
+    var successRedirect = "/";
+    app.post('/login', 
+    passport.authenticate('login', { failureRedirect: failRedirect, failureFlash: false }),
+            function(req, res) {
+                console.log(req.user.username+' is successfully logged in.');
+                console.log(JSON.stringify(req.user));
+                res.redirect(successRedirect);
+            });/*
+    app.post("/login", function(req, res) {
+        console.log(req.body);
+    });*/
 
     app.get("/api/essay/:id.json", function(req, res) {
         Essay.findOne({_id: req.params.id}, function(err, record) {
@@ -140,6 +255,10 @@ db.once('open', function (callback) {
             });
             res.send(t);
         });
+    });
+
+    app.get('/loggedin', function(req, res) {
+        res.send(req.isAuthenticated() ? req.user : '0');
     });
 
     var server = app.listen(port, function() {
