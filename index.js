@@ -8,6 +8,10 @@ var flash = require('connect-flash');
 var expressSession = require('express-session');
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt');
+var fs = require("fs");
+
+var secretsFile = require("./secret-config.json");
+console.log(secretsFile.sessionSecret);
 
 //var loremIpsum = require("lorem-ipsum");
 
@@ -78,7 +82,7 @@ db.once('open', function (callback) {
 
 
 
-    app.use(expressSession({secret: 'mySecretKey', saveUninitialized: true, resave: true}));
+    app.use(expressSession({secret: secretsFile.sessionSecret, saveUninitialized: true, resave: true}));
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(flash());
