@@ -44,25 +44,41 @@ essayApp.config(['$routeProvider', '$locationProvider', '$provide', '$httpProvid
                 templateUrl: 'partials/essay-list.html',
                 controller: 'EssayListCtrl',
                 resolve: {
-                    loggedin: checkLoggedin,
+                    //loggedin: checkLoggedin,
                     userName: getUserName
                 }
             }).
             when('/essay/:essayId', {
                 templateUrl: 'partials/essay-detail.html',
-                controller: 'EssayDetailCtrl'
+                controller: 'EssayDetailCtrl',
+                resolve: {
+                    userName: getUserName
+                }
             }).
             when("/search/:term", {
                 templateUrl: "partials/essay-list.html",
-                controller: "EssaySearchCtrl"
+                controller: "EssaySearchCtrl",
+                resolve: {
+                    userName: getUserName
+                }
             }).
             when("/login", {
                 templateUrl: "partials/login.html",
-                controller: "EssayLoginCtrl"
+                controller: "EssayLoginCtrl",
+                resolve: {
+                    userName: getUserName
+                }
             }).
             when("/user/:username", {
                 templateUrl: 'partials/user.html',
-                controller: "EssayUserCtrl"
+                controller: "EssayUserCtrl",
+                resolve: {
+                    userName: getUserName
+                }
+            }).
+            when("/logout", {
+                templateUrl: 'partials/blank.html',
+                controller: "EssayLogoutCtrl"
             }).
             otherwise({
                 redirectTo: '/essays'

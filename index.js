@@ -312,6 +312,12 @@ db.once('open', function (callback) {
         res.send(req.isAuthenticated() ? req.user : '0');
     });
 
+    app.post('/logoutReq', function(req, res){
+        console.log("Logging out!");
+        req.logOut();
+        res.send(200);
+    });
+
     var server = app.listen(port, function() {
         console.log("Running!");
     });

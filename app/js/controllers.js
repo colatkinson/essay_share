@@ -31,7 +31,7 @@ essayControllers.controller('EssayListCtrl', ['$scope', '$http', '$location', '$
     });
     //checkLoggedin($http, $location, angular.module("essayApp").controller("EssayTopLevel"));
 
-    console.log($scope.user);
+    console.log($scope.user != 0);
 
     $scope.go = function(path) {
         go($location, path);
@@ -70,6 +70,18 @@ essayControllers.controller('EssayLoginCtrl', ['$scope', '$routeParams', '$http'
             /*$http.get('api/essay/' + $routeParams.essayId + '.json').success(function(data) {
                 $scope.essay = data;
             });*/
+
+        $scope.go = function(path) {
+            go($location, path);
+        };
+}]);
+
+essayControllers.controller('EssayLogoutCtrl', ['$scope', '$routeParams', '$http', '$location',
+    function($scope, $routeParams, $http, $location) {
+        $http.post('/logoutReq').success(function(data) {
+            console.log("Success!");
+            $location.path("/");
+        });
 
         $scope.go = function(path) {
             go($location, path);

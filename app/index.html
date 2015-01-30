@@ -39,7 +39,8 @@
                 </div>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{{user ? '/user/'+user.username : '/login'}}">{{user ? user.username : "Login"}}</a></li>
+                    <li><a href="{{user != 0 ? '/user/'+user.username : '/login'}}">{{user != 0 ? user.username : "Login"}}</a></li>
+                    <li ng-if="user != 0"><a href="/logout">Logout</a></li>
                     <!--<li class="dropdown">
                         <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
