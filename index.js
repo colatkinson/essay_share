@@ -21,7 +21,7 @@ var passport = require('passport')
 
 var auth = function(req, res, next) {
     if (!req.isAuthenticated())
-        res.send(401);
+        res.sendStatus(401);
     else
         next();
 };
@@ -99,7 +99,8 @@ db.once('open', function (callback) {
     //app.use(express.cookieSession({ secret: 'tobo!', maxAge: 360*5 }));
 
     passport.serializeUser(function(user, done) {
-        console.log('serializing user: ');console.log(user);
+        /*console.log('serializing user: ');
+        console.log(user);*/
         done(null, user._id);
     });
  
@@ -111,7 +112,6 @@ db.once('open', function (callback) {
 
     passport.use(new LocalStrategy(
         function(username, password, done) {
-            console.log("Strategy called!");
           User.findOne({ username: username }, function(err, user) {
             if (err) { return done(err); }
             if (!user) {
@@ -121,7 +121,6 @@ db.once('open', function (callback) {
               return done(null, false, { message: 'Incorrect password.' });
             }*/
             comparePassword(password, user, function(err, isMatch) {
-                console.log(isMatch);
                 if(!isMatch) {
                     console.log("Bad password");
                     return done(null, false, { message: 'Incorrect password.' });
@@ -253,19 +252,21 @@ db.once('open', function (callback) {
         });
     });
 
-    app.get("/api/user/:name.json", auth, function(req, res) {
+    app.get("/api/user/:name.json", function(req, res) {
         User.findOne({username: req.params.name}, function(err, record) {
             if(err) {
                 res.send(500, "Error occurred");
                 throw err;
             }
-            console.log(record);
             var returnObj = {
                 username: record.username,
                 email: record.email,
                 essays: []
             }
-            console.log(record._id);
+            console.log("user: ", req.user, "record: ", record._id);
+            if(!req.user || (req.user._id != record._id)) {
+                returnObj.email = "";
+            }
             Essay.find({author: record._id}).sort({date: "desc"}).exec(function(err, records) {
                 if(err) {
                     res.sendStatus(500, "Error occurred");

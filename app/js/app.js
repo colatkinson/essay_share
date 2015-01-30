@@ -37,8 +37,8 @@ var checkLoggedin = function($q, $timeout, $http, $location, $rootScope) {
     });
 };
 
-essayApp.config(['$routeProvider', '$locationProvider', '$provide',
-    function($routeProvider, $locationProvider, $provide) {
+essayApp.config(['$routeProvider', '$locationProvider', '$provide', '$httpProvider',
+    function($routeProvider, $locationProvider, $provide, $httpProvider) {
         $routeProvider.
             when('/essays', {
                 templateUrl: 'partials/essay-list.html',
@@ -78,6 +78,24 @@ essayApp.config(['$routeProvider', '$locationProvider', '$provide',
     $locationProvider
         .html5Mode(true)
         .hashPrefix('!');
+
+    console.log($httpProvider);
+
+    $httpProvider.interceptors.push(function($q, $location) {
+        return function(promise) {
+            return promise.then(
+                // Success: just return the response
+                function(response){
+                    return response;
+                },
+                // Error: check the error status to get only the 401
+                function(response) {
+                    if (response.status === 401)
+                        $location.url('/login'); 
+                    return $q.reject(response);
+            });
+        }
+    });
 }]);
 
 essayApp.directive('ngEnter', function () {
