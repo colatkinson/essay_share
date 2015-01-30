@@ -67,6 +67,7 @@ essayApp.config(['$routeProvider', '$locationProvider', '$provide', '$httpProvid
                 controller: "EssayLoginCtrl",
                 resolve: {
                     userName: getUserName
+                    //pastLocation: setPastLocation
                 }
             }).
             when("/user/:username", {

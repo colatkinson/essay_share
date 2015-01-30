@@ -177,9 +177,15 @@ db.once('open', function (callback) {
     //app.use(express.static(__dirname + '/app'));
 
     app.post('/loginReq',
-        passport.authenticate('local', { successRedirect: '/',
-                                         failureRedirect: '/#/login',
-                                         failureFlash: true })
+        passport.authenticate('local', { failureRedirect: '/login',
+                                         failureFlash: true }),
+            function(req, res) {
+                console.log(req.body);
+                if(req.body.pastPath == "")
+                    res.redirect("/");
+                else
+                    res.redirect(req.body.pastPath);
+            }
     );
     /*var failRedirect = "/#/login";
     var successRedirect = "/";
@@ -315,7 +321,7 @@ db.once('open', function (callback) {
     app.post('/logoutReq', function(req, res){
         console.log("Logging out!");
         req.logOut();
-        res.send(200);
+        res.sendStatus(200);
     });
 
     var server = app.listen(port, function() {

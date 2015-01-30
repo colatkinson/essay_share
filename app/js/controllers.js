@@ -5,23 +5,13 @@ function go($location, path) {
 }
 
 var getUserName = function($http, $location, $rootScope) {
-    // Initialize a new promise
-    //var deferred = $q.defer();
-    // Make an AJAX call to check if the user is logged in
     $http.get('/loggedin').success(function(user) {
-    // Authenticated
-    /*if (user !== '0')
-        $timeout(deferred.resolve, 0); // Not Authenticated
-    else {
-        $rootScope.message = 'You need to log in.';
-        $timeout(function(){
-            deferred.reject();
-        }, 0);
-        $location.url('/login');
-    }*/
         $rootScope.user = user;
-        //console.log(angular.module("essayApp").controller("EssayTopLevel"));
     });
+
+    $rootScope.pastPath = $rootScope.curPath;
+    $rootScope.curPath = $location.path();
+    console.log($rootScope.pastPath, $rootScope.curPath);
 };
 
 essayControllers.controller('EssayListCtrl', ['$scope', '$http', '$location', '$rootScope',
@@ -65,11 +55,13 @@ essayControllers.controller("EssaySearchCtrl", ["$scope", "$routeParams", "$http
         $scope.orderProp = '-date';
     }]);
 
-essayControllers.controller('EssayLoginCtrl', ['$scope', '$routeParams', '$http', '$location',
-    function($scope, $routeParams, $http, $location) {
+essayControllers.controller('EssayLoginCtrl', ['$scope', '$routeParams', '$http', '$location', '$rootScope',
+    function($scope, $routeParams, $http, $location, $rootScope) {
             /*$http.get('api/essay/' + $routeParams.essayId + '.json').success(function(data) {
                 $scope.essay = data;
             });*/
+
+        $scope.pastPath = $rootScope.pastPath;
 
         $scope.go = function(path) {
             go($location, path);
