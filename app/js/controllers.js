@@ -94,3 +94,16 @@ essayControllers.controller("EssayUserCtrl", ["$scope", "$routeParams", "$http",
         $scope.orderProp = '-date';
     }]
 );
+
+essayControllers.controller('EssaySignupCtrl', ['$scope', '$routeParams', '$http', '$location', '$rootScope',
+    function($scope, $routeParams, $http, $location, $rootScope) {
+            /*$http.get('api/essay/' + $routeParams.essayId + '.json').success(function(data) {
+                $scope.essay = data;
+            });*/
+
+        $scope.pastPath = $rootScope.pastPath;
+
+        $scope.go = function(path) {
+            go($location, path);
+        };
+}]);

@@ -70,6 +70,14 @@ essayApp.config(['$routeProvider', '$locationProvider', '$provide', '$httpProvid
                     //pastLocation: setPastLocation
                 }
             }).
+            when("/signup", {
+                templateUrl: "partials/signup.html",
+                controller: "EssaySignupCtrl",
+                resolve: {
+                    userName: getUserName
+                    //pastLocation: setPastLocation
+                }
+            }).
             when("/user/:username", {
                 templateUrl: 'partials/user.html',
                 controller: "EssayUserCtrl",
