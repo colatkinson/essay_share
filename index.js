@@ -277,6 +277,25 @@ db.once('open', function (callback) {
         });
     });
 
+    app.post('/submitReq', function(req, res) {
+        /*console.log(req.body);
+        console.log(req.isAuthenticated());
+        console.log(req.user._id);*/
+        if(req.isAuthenticated()) {
+            var testEssay = new Essay({author: req.user._id, title: req.body.title, text: req.body.content});
+            testEssay.save(function(err) {
+                if (err) throw err;
+                res.redirect("/essay/" + testEssay._id);
+            });
+        } else {
+            res.redirect("/login");
+        }
+        /*if(req.body.pastPath == "")
+            res.redirect("/");
+        else
+            res.redirect(req.body.pastPath);*/
+    });
+
     app.get("/api/essays.json", function(req, res) {
         var num = (parseInt(req.query.num) || 20);
         var searchObj = {};

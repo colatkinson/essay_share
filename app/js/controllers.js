@@ -107,3 +107,13 @@ essayControllers.controller('EssaySignupCtrl', ['$scope', '$routeParams', '$http
             go($location, path);
         };
 }]);
+
+essayControllers.controller('EssayCreateCtrl', ['$scope', '$routeParams', '$http', '$location', '$rootScope',
+    function($scope, $routeParams, $http, $location, $rootScope) {
+
+        $scope.pastPath = $rootScope.pastPath;
+
+        $scope.go = function(path) {
+            go($location, path);
+        };
+}]);

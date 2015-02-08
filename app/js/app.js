@@ -89,6 +89,13 @@ essayApp.config(['$routeProvider', '$locationProvider', '$provide', '$httpProvid
                 templateUrl: 'partials/blank.html',
                 controller: "EssayLogoutCtrl"
             }).
+            when("/create", {
+                templateUrl: 'partials/essay-submit.html',
+                controller: "EssayCreateCtrl",
+                resolve: {
+                    userName: getUserName
+                }
+            }).
             otherwise({
                 redirectTo: '/essays'
             });
