@@ -9,6 +9,7 @@ var expressSession = require('express-session');
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt');
 var fs = require("fs");
+var sanitizeHtml = require('sanitize-html');
 
 var secretsFile = require("./secret-config.json");
 
@@ -25,6 +26,12 @@ var auth = function(req, res, next) {
     else
         next();
 };
+
+var mySanitize = function(dirty) {
+    return sanitizeHtml(dirty, {
+        allowedTags: []
+    });
+}
 
 var uri = "mongodb://localhost:27017/essay_share";
 mongoose.connect(uri);
@@ -264,13 +271,14 @@ db.once('open', function (callback) {
                 res.send("Benis :DDD");
                 throw err;
             }
+            console.log(mySanitize(record.text));
             User.findOne({_id: record.author}, function(err, record2) {
                 var obj = {
                     id: record._id,
                     author: record2.username,
                     date: record.date,
-                    title: record.title,
-                    text: record.text
+                    title: mySanitize(record.title),
+                    text: mySanitize(record.text)
                 };
                 res.send(obj);
             });
@@ -282,7 +290,7 @@ db.once('open', function (callback) {
         console.log(req.isAuthenticated());
         console.log(req.user._id);*/
         if(req.isAuthenticated()) {
-            var testEssay = new Essay({author: req.user._id, title: req.body.title, text: req.body.content});
+            var testEssay = new Essay({author: req.user._id, title: mySanitize(req.body.title), text: mySanitize(req.body.content)});
             testEssay.save(function(err) {
                 if (err) throw err;
                 res.redirect("/essay/" + testEssay._id);
@@ -321,8 +329,8 @@ db.once('open', function (callback) {
                             id: record._id,
                             author: records2.username,
                             date: record.date,
-                            title: record.title,
-                            text: record.text.substring(0, 25)+"..."
+                            title: mySanitize(record.title),
+                            text: mySanitize(record.text.substring(0, 25)+"...")
                         });
                         if(returnObj.length == array.length) {
                             res.send(returnObj);

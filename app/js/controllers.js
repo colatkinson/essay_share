@@ -30,8 +30,8 @@ essayControllers.controller('EssayListCtrl', ['$scope', '$http', '$location', '$
     $scope.orderProp = '-date';
   }]);
 
-essayControllers.controller('EssayDetailCtrl', ['$scope', '$routeParams', '$http', '$location',
-    function($scope, $routeParams, $http, $location) {
+essayControllers.controller('EssayDetailCtrl', ['$scope', '$routeParams', '$http', '$location', '$sce',
+    function($scope, $routeParams, $http, $location, $sce) {
             $http.get('api/essay/' + $routeParams.essayId + '.json').success(function(data) {
                 $scope.essay = data;
             });
@@ -39,6 +39,8 @@ essayControllers.controller('EssayDetailCtrl', ['$scope', '$routeParams', '$http
         $scope.go = function(path) {
             go($location, path);
         };
+        $scope.trustAsHtml = $sce.trustAsHtml;
+        //$scope.thisCanBeusedInsideNgBindHtml = $sce.trustAsHtml(someHtmlVar);
 }]);
 
 essayControllers.controller("EssaySearchCtrl", ["$scope", "$routeParams", "$http", '$location',
