@@ -190,7 +190,7 @@ db.once('open', function (callback) {
         passport.authenticate('local', { failureRedirect: '/login',
                                          failureFlash: true }),
             function(req, res) {
-                console.log(req.body);
+                //console.log(req.body);
                 if(req.body.pastPath == "")
                     res.redirect("/");
                 else
@@ -274,7 +274,6 @@ db.once('open', function (callback) {
                 res.send("Benis :DDD");
                 throw err;
             }
-            console.log(mySanitize(record.text));
             User.findOne({_id: record.author}, function(err, record2) {
                 var obj = {
                     id: record._id,
@@ -333,7 +332,7 @@ db.once('open', function (callback) {
                             author: records2.username,
                             date: record.date,
                             title: mySanitize(record.title),
-                            text: markdown.toHTML(mySanitize(record.text.substring(0, 25)+"..."))
+                            text: mySanitize(markdown.toHTML(mySanitize(record.text))).substring(0, 25)+"..."
                         });
                         if(returnObj.length == array.length) {
                             res.send(returnObj);
@@ -372,7 +371,7 @@ db.once('open', function (callback) {
                             id: record2._id,
                             title: record2.title,
                             date: record2.date,
-                            text: record2.text.substring(0, 25)+"..."
+                            text: mySanitize(markdown.toHTML(mySanitize(record2.text))).substring(0, 25)+"..."
                         });
 
                         if(returnObj.essays.length == array.length) {

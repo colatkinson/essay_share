@@ -8,7 +8,7 @@
         <li ng-repeat="essay in user.essays | orderBy:orderProp" class="essay-listing">
           <!--<a href="#/essays/{{essay.id}}" class="thumb"><img ng-src="{{phone.imageUrl}}"></a>-->
           <a href="/essay/{{essay.id}}">{{essay.title}}</a>
-          <p class="text-preview">{{essay.text}}</p>
+          <p class="text-preview" ng-bind-html="trustAsHtml(essay.text)"></p>
         </li>
       </ul>
 </div>

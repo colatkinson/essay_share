@@ -14,8 +14,8 @@ var getUserName = function($http, $location, $rootScope) {
     console.log($rootScope.pastPath, $rootScope.curPath);
 };
 
-essayControllers.controller('EssayListCtrl', ['$scope', '$http', '$location', '$rootScope',
-  function ($scope, $http, $location, $rootScope) {
+essayControllers.controller('EssayListCtrl', ['$scope', '$http', '$location', '$rootScope', '$sce',
+  function ($scope, $http, $location, $rootScope, $sce) {
     $http.get('api/essays.json').success(function(data) {
       $scope.essays = data;
     });
@@ -28,6 +28,8 @@ essayControllers.controller('EssayListCtrl', ['$scope', '$http', '$location', '$
     };
 
     $scope.orderProp = '-date';
+
+    $scope.trustAsHtml = $sce.trustAsHtml;
   }]);
 
 essayControllers.controller('EssayDetailCtrl', ['$scope', '$routeParams', '$http', '$location', '$sce',
@@ -40,7 +42,6 @@ essayControllers.controller('EssayDetailCtrl', ['$scope', '$routeParams', '$http
             go($location, path);
         };
         $scope.trustAsHtml = $sce.trustAsHtml;
-        //$scope.thisCanBeusedInsideNgBindHtml = $sce.trustAsHtml(someHtmlVar);
 }]);
 
 essayControllers.controller("EssaySearchCtrl", ["$scope", "$routeParams", "$http", '$location',
@@ -82,8 +83,8 @@ essayControllers.controller('EssayLogoutCtrl', ['$scope', '$routeParams', '$http
         };
 }]);
 
-essayControllers.controller("EssayUserCtrl", ["$scope", "$routeParams", "$http", '$location',
-    function($scope, $routeParams, $http, $location) {
+essayControllers.controller("EssayUserCtrl", ["$scope", "$routeParams", "$http", '$location', '$sce',
+    function($scope, $routeParams, $http, $location, $sce) {
         $http.get("api/user/" + $routeParams.username + ".json").success(function(data) {
             $scope.user = data;
             //$scope.query = $routeParams.term;
@@ -94,6 +95,7 @@ essayControllers.controller("EssayUserCtrl", ["$scope", "$routeParams", "$http",
         };
 
         $scope.orderProp = '-date';
+        $scope.trustAsHtml = $sce.trustAsHtml;
     }]
 );
 
