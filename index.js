@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt');
 var fs = require("fs");
 var sanitizeHtml = require('sanitize-html');
+var markdown = require( "markdown" ).markdown;
 
 var secretsFile = require("./secret-config.json");
 
@@ -28,9 +29,11 @@ var auth = function(req, res, next) {
 };
 
 var mySanitize = function(dirty) {
-    return sanitizeHtml(dirty, {
+    var sanitized = sanitizeHtml(dirty, {
         allowedTags: []
     });
+
+    return sanitized;
 }
 
 var uri = "mongodb://localhost:27017/essay_share";
@@ -278,7 +281,7 @@ db.once('open', function (callback) {
                     author: record2.username,
                     date: record.date,
                     title: mySanitize(record.title),
-                    text: mySanitize(record.text)
+                    text: markdown.toHTML(mySanitize(record.text))
                 };
                 res.send(obj);
             });
@@ -330,7 +333,7 @@ db.once('open', function (callback) {
                             author: records2.username,
                             date: record.date,
                             title: mySanitize(record.title),
-                            text: mySanitize(record.text.substring(0, 25)+"...")
+                            text: markdown.toHTML(mySanitize(record.text.substring(0, 25)+"..."))
                         });
                         if(returnObj.length == array.length) {
                             res.send(returnObj);
