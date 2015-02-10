@@ -118,4 +118,9 @@ essayControllers.controller('EssayCreateCtrl', ['$scope', '$routeParams', '$http
         $scope.go = function(path) {
             go($location, path);
         };
+
+        $scope.previewText = function() {
+            var elem = document.getElementById("preview");
+            elem.innerHTML = markdown.toHTML(document.getElementsByName("content")[0].value);
+        }
 }]);
