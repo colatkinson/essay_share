@@ -125,4 +125,13 @@ essayControllers.controller('EssayCreateCtrl', ['$scope', '$routeParams', '$http
             var elem = document.getElementById("preview");
             elem.innerHTML = markdown.toHTML(document.getElementsByName("content")[0].value);
         }
+
+        $scope.submitForm = function(isValid) {
+
+            // check to make sure the form is completely valid
+            if (!isValid) {
+                alert('There is an error in the form. Please fix it.');
+            }
+
+        };
 }]);

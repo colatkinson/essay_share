@@ -150,3 +150,8 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus, .form-c
   border: 1px solid #c0c0c0 !important;
   color: #000;
 }
+
+.btn-primary[disabled] {
+  background-color: #c0c0c0;
+  border: 1px solid black;
+}

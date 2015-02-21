@@ -2,19 +2,21 @@
     <div class="row">
         <div class="col-sm-8 col-md-6 col-md-offset-3">
             <div class="account-wall">
-                <form class="form-signin" action="/submitReq" method="post">
+                <form class="form-signin" name="userForm" ng-submit="submitForm(userForm.$valid)" novalidate action="/submitReq" method="post">
                     <div class="form-group">
-                        <input class="form-control input-lg" type="text" name="title" placeholder="Title" required />
+                        <input class="form-control input-lg" type="text" name="title" placeholder="Title" required ng-model="user.Title" />
+                        <p ng-show="userForm.title.$invalid && !userForm.title.$pristine" class="help-block">A title is required.</p>
                     </div>
                     <div class="form-group">
-                        <textarea class="form-control input-lg" type="text" name="content" rows="10" placeholder="Insert essay here" required ng-change="previewText()" ng-model="user.Name" />
+                        <textarea class="form-control input-lg" type="text" name="content" rows="10" placeholder="Insert essay here" required ng-change="previewText()" ng-model="user.Content" />
+                        <p ng-show="userForm.content.$invalid && !userForm.content.$pristine" class="help-block">Essay content is required.</p>
                     </div>
                     <div class="form-group">
                         <div id="preview"></div>
                     </div>
                     <div class="form-group">
                         <input type="hidden" name="pastPath" value="{{pastPath}}" />
-                        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Submit" />
+                        <input class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="userForm.$invalid" value="Submit" />
                     </div>
                     <span class="clearfix"></span>
                 </form>
